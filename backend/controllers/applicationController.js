@@ -46,6 +46,32 @@ const getInterviews = async (req, res) => {
   }
 };
 
+// Get upcoming interviews (next 7 days)
+const getUpcomingInterviews = async (req, res) => {
+  try {
+    const { userId } = req.query;
+    if (!userId) {
+      return res.status(400).json({ message: 'User ID is required' });
+    }
+
+    const today = new Date();
+    const nextWeek = new Date();
+    nextWeek.setDate(today.getDate() + 7);
+
+    const upcoming = await Application.find({
+      userId,
+      interviewDate: {
+        $gte: today,
+        $lte: nextWeek
+      }
+    }).sort({ interviewDate: 1 });
+
+    res.json(upcoming);
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};
+
 // Get all applications for a user with filtering, sorting and pagination
 const getApplications = async (req, res) => {
   try {
@@ -132,6 +158,7 @@ module.exports = {
   createApplication,
   getApplications,
   getInterviews,
+  getUpcomingInterviews,
   updateApplication,
   deleteApplication
 };

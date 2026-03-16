@@ -4,11 +4,14 @@ import { motion } from 'framer-motion';
 import { useNavigate } from 'react-router-dom';
 import * as applicationService from '../services/applicationService';
 import CalendarWidget from '../components/CalendarWidget';
+import InterviewNotifications from '../components/InterviewNotifications';
+import AnalyticsSection from '../components/AnalyticsSection';
 import { LayoutDashboard, Briefcase, GraduationCap, Trophy } from 'lucide-react';
 
 const Dashboard = () => {
     const { currentUser, logout } = useAuth();
     const navigate = useNavigate();
+    const [applications, setApplications] = useState([]);
     const [stats, setStats] = useState({
         total: 0,
         interviews: 0,
@@ -17,28 +20,31 @@ const Dashboard = () => {
     const [isLoading, setIsLoading] = useState(true);
 
     useEffect(() => {
-        const fetchStats = async () => {
+        const fetchDashboardData = async () => {
             try {
                 const userId = currentUser.id || currentUser._id;
                 const data = await applicationService.getApplications(userId, { limit: 1000 });
                 const apps = data.applications || [];
                 
+                setApplications(apps);
                 setStats({
                     total: apps.length,
-                    interviews: apps.filter(a => a.status === 'Interview').length,
+                    interviews: apps.filter(a => a.interviewDate).length,
                     offers: apps.filter(a => a.status === 'Offer').length
                 });
             } catch (err) {
-                console.error('Failed to fetch dashboard stats:', err);
+                console.error('Failed to fetch dashboard data:', err);
             } finally {
                 setIsLoading(false);
             }
         };
 
         if (currentUser) {
-            fetchStats();
+            fetchDashboardData();
         }
     }, [currentUser]);
+
+    const userId = currentUser?._id || currentUser?.id;
 
     return (
         <div className="min-h-screen bg-gradient-to-br from-indigo-50 via-white to-blue-100 dark:from-slate-950 dark:via-slate-900 dark:to-slate-950 p-6 sm:p-10">
@@ -72,6 +78,9 @@ const Dashboard = () => {
                         </button>
                     </div>
                 </motion.div>
+
+                {/* Notification Panel */}
+                <InterviewNotifications userId={userId} />
 
                 {/* Stats Cards */}
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
@@ -131,11 +140,14 @@ const Dashboard = () => {
                     </motion.div>
                 </div>
 
+                {/* Analytics Section */}
+                <AnalyticsSection applications={applications} />
+
                 {/* Main Content Areas */}
                 <div className="grid grid-cols-1 xl:grid-cols-3 gap-10">
                     {/* Calendar Widget */}
                     <div className="xl:col-span-2">
-                        <CalendarWidget userId={currentUser?.id || currentUser?._id} />
+                        <CalendarWidget userId={userId} />
                     </div>
 
                     {/* Applications Quick Overview */}
