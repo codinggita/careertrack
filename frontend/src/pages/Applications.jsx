@@ -1,9 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Plus, Building2, Briefcase, MapPin, Calendar, MoreVertical, Trash2, Edit2, Clock, AlertCircle } from 'lucide-react';
+import { Plus, Building2, Briefcase, MapPin, Calendar, Trash2, Edit2, Clock, Search, ChevronLeft, ChevronRight } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 import * as applicationService from '../services/applicationService';
 import AddApplicationModal from '../components/AddApplicationModal';
+import StatusFilter from '../components/StatusFilter';
+import PriorityFilter from '../components/PriorityFilter';
+import SortDropdown from '../components/SortDropdown';
 
 const statusColors = {
   Applied: 'bg-blue-100 text-blue-700 dark:bg-blue-900/30 dark:text-blue-400',
@@ -25,10 +28,24 @@ const Applications = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [editingApp, setEditingApp] = useState(null);
 
+  // Filter & Pagination state
+  const [filters, setFilters] = useState({
+    search: '',
+    status: '',
+    priority: '',
+    sort: 'dateApplied_desc',
+    page: 1,
+    limit: 6
+  });
+  const [totalPages, setTotalPages] = useState(1);
+
   const fetchApplications = async () => {
+    setIsLoading(true);
     try {
-      const data = await applicationService.getApplications(currentUser.id || currentUser._id);
-      setApplications(data);
+      const userId = currentUser.id || currentUser._id;
+      const data = await applicationService.getApplications(userId, filters);
+      setApplications(data.applications || []);
+      setTotalPages(data.totalPages || 1);
     } catch (error) {
       console.error('Failed to fetch applications:', error);
     } finally {
@@ -38,7 +55,11 @@ const Applications = () => {
 
   useEffect(() => {
     fetchApplications();
-  }, []);
+  }, [filters]);
+
+  const handleFilterChange = (key, value) => {
+    setFilters(prev => ({ ...prev, [key]: value, page: 1 }));
+  };
 
   const handleAddOrUpdate = async (formData) => {
     try {
@@ -61,7 +82,7 @@ const Applications = () => {
     if (window.confirm('Are you sure you want to delete this application?')) {
       try {
         await applicationService.deleteApplication(id);
-        setApplications(prev => prev.filter(app => app._id !== id));
+        fetchApplications();
       } catch (error) {
         console.error('Failed to delete application:', error);
       }
@@ -72,9 +93,7 @@ const Applications = () => {
     hidden: { opacity: 0 },
     show: {
       opacity: 1,
-      transition: {
-        staggerChildren: 0.1
-      }
+      transition: { staggerChildren: 0.1 }
     }
   };
 
@@ -84,7 +103,7 @@ const Applications = () => {
   };
 
   return (
-    <div className="p-6 sm:p-8 space-y-8">
+    <div className="p-6 sm:p-8 space-y-8 max-w-7xl mx-auto">
       {/* Header */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
@@ -105,10 +124,27 @@ const Applications = () => {
         </motion.button>
       </div>
 
+      {/* Toolbar */}
+      <div className="bg-white dark:bg-slate-800 p-4 rounded-2xl shadow-sm border border-slate-100 dark:border-slate-700 flex flex-wrap items-center gap-4">
+        <div className="relative flex-1 min-w-[200px]">
+          <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
+          <input
+            type="text"
+            placeholder="Search company or role..."
+            value={filters.search}
+            onChange={(e) => handleFilterChange('search', e.target.value)}
+            className="w-full pl-10 pr-4 py-2 rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-900 text-slate-700 dark:text-slate-200 outline-none focus:ring-2 focus:ring-indigo-500 transition-all text-sm"
+          />
+        </div>
+        <StatusFilter value={filters.status} onChange={(val) => handleFilterChange('status', val)} />
+        <PriorityFilter value={filters.priority} onChange={(val) => handleFilterChange('priority', val)} />
+        <SortDropdown value={filters.sort} onChange={(val) => handleFilterChange('sort', val)} />
+      </div>
+
       {/* Grid Layout */}
       {isLoading ? (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {[1, 2, 3].map(i => (
+          {[1, 2, 3, 4, 5, 6].map(i => (
             <div key={i} className="h-48 bg-slate-100 dark:bg-slate-800 rounded-2xl animate-pulse" />
           ))}
         </div>
@@ -121,76 +157,119 @@ const Applications = () => {
           <div className="w-20 h-20 bg-indigo-50 dark:bg-indigo-900/20 rounded-2xl flex items-center justify-center mb-4">
             <Briefcase className="w-10 h-10 text-indigo-500" />
           </div>
-          <h3 className="text-xl font-bold text-slate-900 dark:text-white">No applications yet</h3>
-          <p className="text-slate-500 dark:text-slate-400 mt-2 max-w-xs">Start your journey by adding your first internship application.</p>
+          <h3 className="text-xl font-bold text-slate-900 dark:text-white">
+            {filters.search || filters.status || filters.priority ? "No matches found" : "No applications yet"}
+          </h3>
+          <p className="text-slate-500 dark:text-slate-400 mt-2 max-w-xs">
+            {filters.search || filters.status || filters.priority ? "Adjust your filters to see more applications." : "Start your journey by adding your first internship application."}
+          </p>
         </motion.div>
       ) : (
-        <motion.div
-          variants={container}
-          initial="hidden"
-          animate="show"
-          className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"
-        >
-          {applications.map(app => (
-            <motion.div
-              key={app._id}
-              variants={item}
-              whileHover={{ y: -4 }}
-              className="bg-white dark:bg-slate-800 rounded-2xl p-6 shadow-sm border border-slate-100 dark:border-slate-700 hover:shadow-xl transition-all relative group"
-            >
-              <div className="flex justify-between items-start mb-4">
-                <div className="w-12 h-12 bg-slate-50 dark:bg-slate-900 rounded-xl flex items-center justify-center border border-slate-100 dark:border-slate-700">
-                  <Building2 className="w-6 h-6 text-indigo-500" />
+        <div className="space-y-8">
+          <motion.div
+            variants={container}
+            initial="hidden"
+            animate="show"
+            className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"
+          >
+            {applications.map(app => (
+              <motion.div
+                key={app._id}
+                variants={item}
+                whileHover={{ y: -4 }}
+                className="bg-white dark:bg-slate-800 rounded-2xl p-6 shadow-sm border border-slate-100 dark:border-slate-700 hover:shadow-xl transition-all relative group"
+              >
+                <div className="flex justify-between items-start mb-4">
+                  <div className="w-12 h-12 bg-slate-50 dark:bg-slate-900 rounded-xl flex items-center justify-center border border-slate-100 dark:border-slate-700">
+                    <Building2 className="w-6 h-6 text-indigo-500" />
+                  </div>
+                  <div className="flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
+                    <button
+                      onClick={() => {
+                        setEditingApp(app);
+                        setIsModalOpen(true);
+                      }}
+                      className="p-2 hover:bg-slate-50 dark:hover:bg-slate-700 rounded-lg text-slate-500 transition-colors"
+                    >
+                      <Edit2 className="w-4 h-4" />
+                    </button>
+                    <button
+                      onClick={() => handleDelete(app._id)}
+                      className="p-2 hover:bg-red-50 dark:hover:bg-red-900/20 rounded-lg text-slate-500 hover:text-red-500 transition-colors"
+                    >
+                      <Trash2 className="w-4 h-4" />
+                    </button>
+                  </div>
                 </div>
-                <div className="flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
-                  <button
-                    onClick={() => {
-                      setEditingApp(app);
-                      setIsModalOpen(true);
-                    }}
-                    className="p-2 hover:bg-slate-50 dark:hover:bg-slate-700 rounded-lg text-slate-500 transition-colors"
-                  >
-                    <Edit2 className="w-4 h-4" />
-                  </button>
-                  <button
-                    onClick={() => handleDelete(app._id)}
-                    className="p-2 hover:bg-red-50 dark:hover:bg-red-900/20 rounded-lg text-slate-500 hover:text-red-500 transition-colors"
-                  >
-                    <Trash2 className="w-4 h-4" />
-                  </button>
-                </div>
-              </div>
 
-              <div className="space-y-1">
-                <h3 className="text-lg font-bold text-slate-900 dark:text-white line-clamp-1">{app.companyName}</h3>
-                <p className="text-slate-500 dark:text-slate-400 flex items-center gap-2 text-sm">
-                  <Briefcase className="w-4 h-4" /> {app.role}
-                </p>
-                {app.location && (
-                  <p className="text-slate-400 dark:text-slate-500 flex items-center gap-2 text-sm">
-                    <MapPin className="w-4 h-4" /> {app.location}
+                <div className="space-y-1">
+                  <h3 className="text-lg font-bold text-slate-900 dark:text-white line-clamp-1">{app.companyName}</h3>
+                  <p className="text-slate-500 dark:text-slate-400 flex items-center gap-2 text-sm">
+                    <Briefcase className="w-4 h-4" /> {app.role}
                   </p>
-                )}
+                  {app.location && (
+                    <p className="text-slate-400 dark:text-slate-500 flex items-center gap-2 text-sm">
+                      <MapPin className="w-4 h-4" /> {app.location}
+                    </p>
+                  )}
+                </div>
+
+                <div className="flex flex-wrap gap-2 mt-4">
+                  <span className={`px-3 py-1 rounded-full text-xs font-bold ${statusColors[app.status]}`}>
+                    {app.status}
+                  </span>
+                  <span className={`px-3 py-1 rounded-full text-xs font-bold border ${priorityColors[app.priority]}`}>
+                    {app.priority} Priority
+                  </span>
+                </div>
+
+                <div className="mt-4 pt-4 border-t border-slate-50 dark:border-slate-700 flex items-center justify-between text-xs text-slate-400">
+                  <span className="flex items-center gap-1">
+                    <Clock className="w-3 h-3" /> 
+                    Applied {new Date(app.dateApplied).toLocaleDateString()}
+                  </span>
+                </div>
+              </motion.div>
+            ))}
+          </motion.div>
+
+          {/* Pagination */}
+          {totalPages > 1 && (
+            <div className="flex items-center justify-center gap-2 pt-4">
+              <button
+                disabled={filters.page === 1}
+                onClick={() => setFilters(prev => ({ ...prev, page: prev.page - 1 }))}
+                className="p-2 rounded-xl border border-slate-200 dark:border-slate-700 text-slate-600 dark:text-slate-400 disabled:opacity-50 hover:bg-slate-50 dark:hover:bg-slate-700 transition-all"
+              >
+                <ChevronLeft className="w-5 h-5" />
+              </button>
+              
+              <div className="flex items-center gap-1">
+                {[...Array(totalPages)].map((_, i) => (
+                  <button
+                    key={i + 1}
+                    onClick={() => setFilters(prev => ({ ...prev, page: i + 1 }))}
+                    className={`w-10 h-10 rounded-xl font-bold text-sm transition-all ${
+                      filters.page === i + 1
+                        ? 'bg-indigo-600 text-white shadow-lg shadow-indigo-200'
+                        : 'text-slate-600 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-700'
+                    }`}
+                  >
+                    {i + 1}
+                  </button>
+                ))}
               </div>
 
-              <div className="flex flex-wrap gap-2 mt-4">
-                <span className={`px-3 py-1 rounded-full text-xs font-bold ${statusColors[app.status]}`}>
-                  {app.status}
-                </span>
-                <span className={`px-3 py-1 rounded-full text-xs font-bold border ${priorityColors[app.priority]}`}>
-                  {app.priority} Priority
-                </span>
-              </div>
-
-              <div className="mt-4 pt-4 border-t border-slate-50 dark:border-slate-700 flex items-center justify-between text-xs text-slate-400">
-                <span className="flex items-center gap-1">
-                  <Clock className="w-3 h-3" /> 
-                  Applied {new Date(app.dateApplied).toLocaleDateString()}
-                </span>
-              </div>
-            </motion.div>
-          ))}
-        </motion.div>
+              <button
+                disabled={filters.page === totalPages}
+                onClick={() => setFilters(prev => ({ ...prev, page: prev.page + 1 }))}
+                className="p-2 rounded-xl border border-slate-200 dark:border-slate-700 text-slate-600 dark:text-slate-400 disabled:opacity-50 hover:bg-slate-50 dark:hover:bg-slate-700 transition-all"
+              >
+                <ChevronRight className="w-5 h-5" />
+              </button>
+            </div>
+          )}
+        </div>
       )}
 
       <AddApplicationModal

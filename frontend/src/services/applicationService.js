@@ -1,11 +1,13 @@
 const API_URL = 'http://localhost:5000/api/applications';
 
 /**
- * Fetch all applications for a specific user.
+ * Fetch all applications for a specific user with filtering/pagination.
  * @param {string} userId
+ * @param {object} params - search, status, priority, sort, page, limit
  */
-export const getApplications = async (userId) => {
-  const response = await fetch(`${API_URL}?userId=${userId}`);
+export const getApplications = async (userId, params = {}) => {
+  const queryParams = new URLSearchParams({ userId, ...params }).toString();
+  const response = await fetch(`${API_URL}?${queryParams}`);
   if (!response.ok) {
     const error = await response.json();
     throw new Error(error.message || 'Failed to fetch applications');
