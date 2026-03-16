@@ -8,6 +8,7 @@ import AddApplicationModal from '../components/AddApplicationModal';
 import StatusFilter from '../components/StatusFilter';
 import PriorityFilter from '../components/PriorityFilter';
 import SortDropdown from '../components/SortDropdown';
+import SkeletonCard from '../components/SkeletonCard';
 
 const statusColors = {
   Applied: 'bg-blue-100 text-blue-700 dark:bg-blue-900/30 dark:text-blue-400',
@@ -170,7 +171,7 @@ const Applications = () => {
         {isLoading ? (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
             {[1, 2, 3, 4, 5, 6].map(i => (
-              <div key={i} className="h-64 bg-white/50 dark:bg-slate-800/50 rounded-3xl border border-white dark:border-slate-700 animate-pulse" />
+              <SkeletonCard key={i} />
             ))}
           </div>
         ) : applications.length === 0 ? (

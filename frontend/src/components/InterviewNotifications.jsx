@@ -3,6 +3,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { Bell, Clock, Building2, Briefcase, ChevronRight, X, AlertCircle } from 'lucide-react';
 import * as applicationService from '../services/applicationService';
 import { useNavigate } from 'react-router-dom';
+import SkeletonCard from './SkeletonCard';
 
 const InterviewNotifications = ({ userId }) => {
     const navigate = useNavigate();
@@ -34,7 +35,19 @@ const InterviewNotifications = ({ userId }) => {
         return diffDays;
     };
 
-    if (isLoading) return null;
+    if (isLoading) {
+        return (
+            <div className="bg-white dark:bg-slate-800 rounded-3xl p-6 shadow-xl border border-slate-100 dark:border-slate-700">
+                <div className="h-6 w-1/4 bg-slate-100 dark:bg-slate-900 rounded-lg animate-pulse mb-6" />
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                    <SkeletonCard variant="notification" />
+                    <SkeletonCard variant="notification" />
+                    <SkeletonCard variant="notification" />
+                </div>
+            </div>
+        );
+    }
+    
     if (upcoming.length === 0) return null;
 
     return (
