@@ -7,9 +7,12 @@ import CalendarWidget from '../components/CalendarWidget';
 import InterviewNotifications from '../components/InterviewNotifications';
 import AnalyticsSection from '../components/AnalyticsSection';
 import { LayoutDashboard, Briefcase, GraduationCap, Trophy } from 'lucide-react';
+import { useTheme } from '../context/ThemeContext';
+import { FiSun, FiMoon } from 'react-icons/fi';
 
 const Dashboard = () => {
     const { currentUser, logout } = useAuth();
+    const { theme, toggleTheme } = useTheme();
     const navigate = useNavigate();
     const [applications, setApplications] = useState([]);
     const [stats, setStats] = useState({
@@ -70,6 +73,13 @@ const Dashboard = () => {
                     </div>
                     
                     <div className="flex items-center gap-4">
+                        <button
+                            onClick={toggleTheme}
+                            className="p-3 rounded-2xl bg-white dark:bg-slate-800 text-slate-600 dark:text-slate-300 border border-slate-200 dark:border-slate-700 hover:bg-slate-50 dark:hover:bg-slate-700 transition-all shadow-sm active:scale-95"
+                            aria-label="Toggle theme"
+                        >
+                            {theme === 'light' ? <FiMoon size={20} /> : <FiSun size={20} />}
+                        </button>
                         <button 
                             onClick={logout}
                             className="px-6 py-2.5 bg-white dark:bg-slate-800 text-slate-700 dark:text-slate-200 font-bold rounded-2xl border border-slate-200 dark:border-slate-700 hover:bg-slate-50 dark:hover:bg-slate-700 transition-all shadow-sm"

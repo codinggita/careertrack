@@ -3,6 +3,8 @@ import { motion } from 'framer-motion';
 import { Loader2, Mail, Lock } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
+import { useTheme } from '../context/ThemeContext';
+import { FiSun, FiMoon } from 'react-icons/fi';
 import { login as authLogin } from '../services/authService';
 
 const Login = () => {
@@ -13,6 +15,7 @@ const Login = () => {
   const [error, setError] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const { login } = useAuth();
+  const { theme, toggleTheme } = useTheme();
   const navigate = useNavigate();
   
   const emailInputRef = useRef(null);
@@ -54,10 +57,10 @@ const Login = () => {
   };
 
   return (
-    <div className="min-h-screen flex w-full bg-gradient-to-br from-indigo-50 via-white to-blue-100 dark:from-slate-950 dark:via-slate-900 dark:to-slate-950 overflow-hidden font-sans">
+    <div className="min-h-screen flex w-full bg-gradient-to-br from-indigo-50 via-white to-blue-100 dark:from-slate-950 dark:via-slate-900 dark:to-slate-950 overflow-hidden font-sans transition-colors duration-500">
       
       {/* Left Column: Branding Section (Hidden on small screens) */}
-      <div className="hidden lg:flex lg:w-1/2 bg-gradient-to-br from-indigo-600 via-purple-600 to-indigo-900 p-12 flex-col justify-between relative overflow-hidden shadow-2xl">
+      <div className="hidden lg:flex lg:w-1/2 bg-gradient-to-br from-indigo-600 via-purple-600 to-indigo-900 p-12 flex-col justify-between relative overflow-hidden shadow-2xl transition-all duration-500">
         
         {/* Animated Background Blobs */}
         <motion.div 
@@ -77,12 +80,23 @@ const Login = () => {
              initial={{ opacity: 0, y: -20 }}
              animate={{ opacity: 1, y: 0 }}
              transition={{ duration: 0.8 }}
-             className="text-white text-3xl font-extrabold tracking-tight flex items-center gap-3"
           >
-            <div className="w-10 h-10 bg-white/20 rounded-xl flex items-center justify-center backdrop-blur-sm border border-white/30">
-               <div className="w-5 h-5 bg-white rounded-md" />
+            <div className="flex items-center justify-between gap-3">
+              <div className="flex items-center gap-3 text-white text-3xl font-extrabold tracking-tight">
+                <div className="w-10 h-10 bg-white/20 rounded-xl flex items-center justify-center backdrop-blur-sm border border-white/30">
+                   <div className="w-5 h-5 bg-white rounded-md" />
+                </div>
+                CareerTrack
+              </div>
+              <button
+                  type="button"
+                  onClick={toggleTheme}
+                  className="p-2.5 rounded-xl bg-white/10 backdrop-blur-md border border-white/20 text-white hover:bg-white/20 transition-all active:scale-95"
+                  aria-label="Toggle theme"
+              >
+                  {theme === 'light' ? <FiMoon size={20} /> : <FiSun size={20} />}
+              </button>
             </div>
-            CareerTrack
           </motion.div>
         </div>
 
@@ -133,7 +147,7 @@ const Login = () => {
            className="w-full max-w-md"
         >
           {/* Form Card */}
-          <div className="bg-white/80 dark:bg-slate-800/80 backdrop-blur-2xl rounded-[3rem] shadow-2xl shadow-indigo-500/10 dark:shadow-none border border-white dark:border-slate-700/50 overflow-hidden relative z-10">
+          <div className="bg-white/80 dark:bg-slate-800/80 backdrop-blur-2xl rounded-[3rem] shadow-2xl shadow-indigo-500/10 dark:shadow-none border border-white dark:border-slate-700/50 overflow-hidden relative z-10 transition-all duration-300">
              <div className="p-10 sm:p-12">
                <div className="text-center mb-10">
                  <h2 className="text-4xl font-black text-slate-900 dark:text-white tracking-tighter italic">Welcome back</h2>

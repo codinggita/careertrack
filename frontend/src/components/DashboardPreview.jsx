@@ -3,8 +3,8 @@ import { motion } from 'framer-motion';
 
 const DashboardPreview = () => {
   return (
-    <section id="preview" className="py-32 bg-slate-50 dark:bg-slate-900/50 relative overflow-hidden">
-      <div className="absolute top-1/2 left-0 w-96 h-96 bg-indigo-500/5 rounded-full blur-[120px] -z-10" />
+    <section id="preview" className="py-32 bg-slate-50 dark:bg-slate-900/50 relative overflow-hidden transition-colors duration-500">
+      <div className="absolute top-1/2 left-0 w-96 h-96 bg-indigo-500/5 rounded-full blur-[120px] -z-10 transition-all duration-500" />
       <div className="container mx-auto px-6">
         <div className="flex flex-col lg:flex-row items-center gap-24">
           <motion.div 

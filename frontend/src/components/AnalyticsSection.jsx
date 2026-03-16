@@ -5,6 +5,7 @@ import {
 } from 'recharts';
 import { motion } from 'framer-motion';
 import { PieChart as PieIcon, BarChart3, TrendingUp, Filter } from 'lucide-react';
+import { useTheme } from '../context/ThemeContext';
 
 const COLORS = {
     Applied: '#6366f1', // Indigo
@@ -14,6 +15,14 @@ const COLORS = {
 };
 
 const AnalyticsSection = ({ applications }) => {
+    const { theme } = useTheme();
+    const isDark = theme === 'dark';
+    
+    // Grid and Text colors for charts
+    const gridColor = isDark ? '#334155' : '#f1f5f9';
+    const textColor = isDark ? '#94a3b8' : '#64748b';
+    const tooltipBg = isDark ? '#1e293b' : '#ffffff';
+    const tooltipColor = isDark ? '#f1f5f9' : '#0f172a';
     // 1. Applications by Status
     const statusData = useMemo(() => {
         const counts = applications.reduce((acc, app) => {
@@ -98,7 +107,13 @@ const AnalyticsSection = ({ applications }) => {
                                 ))}
                             </Pie>
                             <Tooltip 
-                                contentStyle={{ borderRadius: '15px', border: 'none', boxShadow: '0 10px 15px -3px rgba(0,0,0,0.1)' }}
+                                contentStyle={{ 
+                                    borderRadius: '15px', 
+                                    border: 'none', 
+                                    boxShadow: '0 10px 15px -3px rgba(0,0,0,0.1)',
+                                    backgroundColor: tooltipBg,
+                                    color: tooltipColor
+                                }}
                                 itemStyle={{ fontWeight: 'bold' }}
                             />
                             <Legend verticalAlign="bottom" height={36}/>
@@ -120,20 +135,26 @@ const AnalyticsSection = ({ applications }) => {
                 <div className="h-[250px] w-full">
                     <ResponsiveContainer width="100%" height="100%">
                         <BarChart data={monthlyData}>
-                            <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#f1f5f9" />
+                            <CartesianGrid strokeDasharray="3 3" vertical={false} stroke={gridColor} />
                             <XAxis 
                                 dataKey="name" 
                                 axisLine={false} 
                                 tickLine={false} 
-                                tick={{ fontSize: 10, fontWeight: 600, fill: '#94a3b8' }} 
+                                tick={{ fontSize: 10, fontWeight: 600, fill: textColor }} 
                             />
                             <YAxis hide />
                             <Tooltip 
                                 cursor={{ fill: 'transparent' }}
-                                contentStyle={{ borderRadius: '15px', border: 'none', boxShadow: '0 10px 15px -3px rgba(0,0,0,0.1)' }}
+                                contentStyle={{ 
+                                    borderRadius: '15px', 
+                                    border: 'none', 
+                                    boxShadow: '0 10px 15px -3px rgba(0,0,0,0.1)',
+                                    backgroundColor: tooltipBg,
+                                    color: tooltipColor
+                                }}
                             />
                             <Bar dataKey="count" fill="#6366f1" radius={[10, 10, 0, 0]} barSize={30}>
-                                <LabelList dataKey="count" position="top" style={{ fontSize: 10, fontWeight: 800, fill: '#6366f1' }} />
+                                <LabelList dataKey="count" position="top" style={{ fontSize: 10, fontWeight: 800, fill: isDark ? '#818cf8' : '#6366f1' }} />
                             </Bar>
                         </BarChart>
                     </ResponsiveContainer>
@@ -167,7 +188,13 @@ const AnalyticsSection = ({ applications }) => {
                                 ))}
                             </Pie>
                             <Tooltip 
-                                contentStyle={{ borderRadius: '15px', border: 'none', boxShadow: '0 10px 15px -3px rgba(0,0,0,0.1)' }}
+                                contentStyle={{ 
+                                    borderRadius: '15px', 
+                                    border: 'none', 
+                                    boxShadow: '0 10px 15px -3px rgba(0,0,0,0.1)',
+                                    backgroundColor: tooltipBg,
+                                    color: tooltipColor
+                                }}
                             />
                             <Legend verticalAlign="bottom" height={36}/>
                         </PieChart>

@@ -27,8 +27,8 @@ const steps = [
 
 const HowItWorks = () => {
   return (
-    <section id="how-it-works" className="py-32 bg-slate-50 dark:bg-slate-900/50 relative overflow-hidden">
-      <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-indigo-500/5 rounded-full blur-[120px]" />
+    <section id="how-it-works" className="py-32 bg-slate-50 dark:bg-slate-900/50 relative overflow-hidden transition-colors duration-500">
+      <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-indigo-500/5 rounded-full blur-[120px] transition-all duration-500" />
       <div className="container mx-auto px-6 text-center relative z-10">
         <div className="max-w-3xl mx-auto mb-24">
           <motion.h2 
