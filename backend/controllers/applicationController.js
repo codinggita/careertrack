@@ -3,10 +3,8 @@ const Application = require('../models/Application');
 // Create new internship application
 const createApplication = async (req, res) => {
   try {
-    const { companyName, role, location, dateApplied, status, priority, notes, userId } = req.body;
+    const { companyName, role, location, dateApplied, status, priority, notes, userId, interviewDate } = req.body;
     
-    // In a real app with JWT, userId would come from req.user.id
-    // For now, we take it from the request body or assume a logged-in user context
     if (!userId) {
       return res.status(400).json({ message: 'User ID is required' });
     }
@@ -19,13 +17,32 @@ const createApplication = async (req, res) => {
       dateApplied,
       status,
       priority,
-      notes
+      notes,
+      interviewDate
     });
 
     const savedApplication = await application.save();
     res.status(201).json(savedApplication);
   } catch (error) {
     res.status(400).json({ message: error.message });
+  }
+};
+
+// Get only applications with an interview date
+const getInterviews = async (req, res) => {
+  try {
+    const { userId } = req.query;
+    if (!userId) {
+      return res.status(400).json({ message: 'User ID is required' });
+    }
+    const interviews = await Application.find({ 
+      userId, 
+      interviewDate: { $ne: null } 
+    }).sort({ interviewDate: 1 });
+    
+    res.json(interviews);
+  } catch (error) {
+    res.status(500).json({ message: error.message });
   }
 };
 
@@ -114,6 +131,7 @@ const deleteApplication = async (req, res) => {
 module.exports = {
   createApplication,
   getApplications,
+  getInterviews,
   updateApplication,
   deleteApplication
 };

@@ -3,6 +3,8 @@ import { useAuth } from '../context/AuthContext';
 import { motion } from 'framer-motion';
 import { useNavigate } from 'react-router-dom';
 import * as applicationService from '../services/applicationService';
+import CalendarWidget from '../components/CalendarWidget';
+import { LayoutDashboard, Briefcase, GraduationCap, Trophy } from 'lucide-react';
 
 const Dashboard = () => {
     const { currentUser, logout } = useAuth();
@@ -39,63 +41,145 @@ const Dashboard = () => {
     }, [currentUser]);
 
     return (
-        <div className="min-h-screen bg-gray-50 p-8">
-            <motion.div 
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                className="max-w-4xl mx-auto bg-white rounded-3xl shadow-sm border border-gray-100 p-8"
-            >
-                <div className="flex justify-between items-center mb-12">
+        <div className="min-h-screen bg-gradient-to-br from-indigo-50 via-white to-blue-100 dark:from-slate-950 dark:via-slate-900 dark:to-slate-950 p-6 sm:p-10">
+            <div className="max-w-7xl mx-auto space-y-10">
+                {/* Header Section */}
+                <motion.div 
+                    initial={{ opacity: 0, y: -20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    className="flex flex-col md:flex-row justify-between items-start md:items-center gap-6"
+                >
                     <div>
-                        <h1 className="text-3xl font-bold text-gray-900">Welcome, {currentUser?.name}!</h1>
-                        <p className="text-gray-500">Here's an overview of your internship applications.</p>
+                        <div className="flex items-center gap-3 mb-2">
+                            <div className="p-2 bg-indigo-600 rounded-xl shadow-lg shadow-indigo-200 dark:shadow-none">
+                                <LayoutDashboard className="w-6 h-6 text-white" />
+                            </div>
+                            <h1 className="text-3xl font-extrabold text-slate-900 dark:text-white tracking-tight">
+                                Career Dashboard
+                            </h1>
+                        </div>
+                        <p className="text-slate-500 dark:text-slate-400 font-medium italic">
+                            Welcome back, {currentUser?.name}! Ready to land your next role?
+                        </p>
                     </div>
-                    <button 
-                        onClick={logout}
-                        className="px-6 py-2 bg-red-50 text-red-600 font-medium rounded-xl hover:bg-red-100 transition-colors"
+                    
+                    <div className="flex items-center gap-4">
+                        <button 
+                            onClick={logout}
+                            className="px-6 py-2.5 bg-white dark:bg-slate-800 text-slate-700 dark:text-slate-200 font-bold rounded-2xl border border-slate-200 dark:border-slate-700 hover:bg-slate-50 dark:hover:bg-slate-700 transition-all shadow-sm"
+                        >
+                            Logout
+                        </button>
+                    </div>
+                </motion.div>
+
+                {/* Stats Cards */}
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+                    <motion.div 
+                        initial={{ opacity: 0, scale: 0.9 }}
+                        animate={{ opacity: 1, scale: 1 }}
+                        transition={{ delay: 0.1 }}
+                        onClick={() => navigate('/dashboard/applications')}
+                        className="p-8 bg-white dark:bg-slate-800 rounded-3xl shadow-xl border border-white dark:border-slate-700 cursor-pointer hover:shadow-2xl hover:-translate-y-1 transition-all group relative overflow-hidden"
                     >
-                        Logout
-                    </button>
+                        <div className="absolute -right-4 -top-4 w-24 h-24 bg-indigo-50 dark:bg-indigo-900/20 rounded-full blur-2xl group-hover:bg-indigo-100 transition-colors" />
+                        <div className="relative z-10">
+                            <div className="w-12 h-12 bg-indigo-100 dark:bg-indigo-900/40 rounded-2xl flex items-center justify-center mb-6">
+                                <Briefcase className="w-6 h-6 text-indigo-600" />
+                            </div>
+                            <span className="text-4xl font-black text-slate-900 dark:text-white">
+                                {isLoading ? '...' : stats.total}
+                            </span>
+                            <p className="text-slate-500 dark:text-slate-400 font-bold text-sm tracking-wide mt-1 uppercase">Total Applications</p>
+                        </div>
+                    </motion.div>
+
+                    <motion.div 
+                        initial={{ opacity: 0, scale: 0.9 }}
+                        animate={{ opacity: 1, scale: 1 }}
+                        transition={{ delay: 0.2 }}
+                        className="p-8 bg-white dark:bg-slate-800 rounded-3xl shadow-xl border border-white dark:border-slate-700 hover:shadow-2xl hover:-translate-y-1 transition-all group relative overflow-hidden"
+                    >
+                        <div className="absolute -right-4 -top-4 w-24 h-24 bg-amber-50 dark:bg-amber-900/20 rounded-full blur-2xl group-hover:bg-amber-100 transition-colors" />
+                        <div className="relative z-10">
+                            <div className="w-12 h-12 bg-amber-100 dark:bg-amber-900/40 rounded-2xl flex items-center justify-center mb-6">
+                                <GraduationCap className="w-6 h-6 text-amber-600" />
+                            </div>
+                            <span className="text-4xl font-black text-slate-900 dark:text-white">
+                                {isLoading ? '...' : stats.interviews}
+                            </span>
+                            <p className="text-slate-500 dark:text-slate-400 font-bold text-sm tracking-wide mt-1 uppercase">Interviews Scheduled</p>
+                        </div>
+                    </motion.div>
+
+                    <motion.div 
+                        initial={{ opacity: 0, scale: 0.9 }}
+                        animate={{ opacity: 1, scale: 1 }}
+                        transition={{ delay: 0.3 }}
+                        className="p-8 bg-white dark:bg-slate-800 rounded-3xl shadow-xl border border-white dark:border-slate-700 hover:shadow-2xl hover:-translate-y-1 transition-all group relative overflow-hidden"
+                    >
+                        <div className="absolute -right-4 -top-4 w-24 h-24 bg-emerald-50 dark:bg-emerald-900/20 rounded-full blur-2xl group-hover:bg-emerald-100 transition-colors" />
+                        <div className="relative z-10">
+                            <div className="w-12 h-12 bg-emerald-100 dark:bg-emerald-900/40 rounded-2xl flex items-center justify-center mb-6">
+                                <Trophy className="w-6 h-6 text-emerald-600" />
+                            </div>
+                            <span className="text-4xl font-black text-slate-900 dark:text-white">
+                                {isLoading ? '...' : stats.offers}
+                            </span>
+                            <p className="text-slate-500 dark:text-slate-400 font-bold text-sm tracking-wide mt-1 uppercase">Offers Received</p>
+                        </div>
+                    </motion.div>
                 </div>
 
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-12">
-                    <div 
-                        onClick={() => navigate('/dashboard/applications')}
-                        className="p-6 bg-indigo-50 rounded-2xl border border-indigo-100 cursor-pointer hover:shadow-md transition-all"
-                    >
-                        <span className="text-indigo-600 font-bold text-2xl">
-                            {isLoading ? '...' : stats.total}
-                        </span>
-                        <p className="text-gray-600 text-sm">Applications</p>
+                {/* Main Content Areas */}
+                <div className="grid grid-cols-1 xl:grid-cols-3 gap-10">
+                    {/* Calendar Widget */}
+                    <div className="xl:col-span-2">
+                        <CalendarWidget userId={currentUser?.id || currentUser?._id} />
                     </div>
-                    <div className="p-6 bg-purple-50 rounded-2xl border border-purple-100">
-                        <span className="text-purple-600 font-bold text-2xl">
-                            {isLoading ? '...' : stats.interviews}
-                        </span>
-                        <p className="text-gray-600 text-sm">Interviews</p>
-                    </div>
-                    <div className="p-6 bg-pink-50 rounded-2xl border border-pink-100">
-                        <span className="text-pink-600 font-bold text-2xl">
-                            {isLoading ? '...' : stats.offers}
-                        </span>
-                        <p className="text-gray-600 text-sm">Offers</p>
-                    </div>
-                </div>
 
-                <div className="text-center py-20 bg-gray-50 rounded-2xl border-2 border-dashed border-gray-200">
-                    <p className="text-gray-400">
-                        {stats.total > 0 
-                            ? `You have ${stats.total} application${stats.total === 1 ? '' : 's'}. Manage them in the Applications page.` 
-                            : "No applications found. Click below to add your first one!"}
-                    </p>
-                    <button 
-                        onClick={() => navigate('/dashboard/applications')}
-                        className="mt-4 px-6 py-2 bg-indigo-600 text-white font-medium rounded-xl hover:bg-indigo-700 transition-colors"
+                    {/* Applications Quick Overview */}
+                    <motion.div 
+                        initial={{ opacity: 0, x: 20 }}
+                        animate={{ opacity: 1, x: 0 }}
+                        className="bg-white dark:bg-slate-800 rounded-3xl p-8 shadow-xl border border-white dark:border-slate-700 flex flex-col justify-between"
                     >
-                        {stats.total > 0 ? "View All Applications" : "Go to Applications"}
-                    </button>
+                        <div>
+                            <h3 className="text-xl font-bold text-slate-900 dark:text-white mb-4">Quick Overview</h3>
+                            <div className="space-y-6">
+                                <div className="p-4 bg-slate-50 dark:bg-slate-900/50 rounded-2xl border border-slate-100 dark:border-slate-700">
+                                    <p className="text-sm text-slate-500 dark:text-slate-400 mb-1">Response Rate</p>
+                                    <div className="flex items-center gap-4">
+                                        <div className="flex-1 h-2 bg-slate-200 dark:bg-slate-700 rounded-full overflow-hidden">
+                                            <div 
+                                                className="h-full bg-indigo-600 rounded-full transition-all duration-1000"
+                                                style={{ width: stats.total > 0 ? `${((stats.interviews + stats.offers) / stats.total) * 100}%` : '0%' }}
+                                            />
+                                        </div>
+                                        <span className="font-bold text-slate-900 dark:text-white">
+                                            {stats.total > 0 ? Math.round(((stats.interviews + stats.offers) / stats.total) * 100) : 0}%
+                                        </span>
+                                    </div>
+                                </div>
+
+                                <div className="text-center py-6">
+                                    <p className="text-slate-400 text-sm mb-6">
+                                        {stats.total > 0 
+                                            ? `Keep track of your journey. You have ${stats.total} application${stats.total === 1 ? '' : 's'} in progress.` 
+                                            : "Your journey starts here! Scale your potential by adding your first application."}
+                                    </p>
+                                    <button 
+                                        onClick={() => navigate('/dashboard/applications')}
+                                        className="w-full py-4 bg-gradient-to-r from-indigo-600 to-indigo-700 text-white font-black rounded-2xl hover:shadow-xl hover:shadow-indigo-500/25 transition-all active:scale-95"
+                                    >
+                                        {stats.total > 0 ? "Manage Applications" : "Add Your First App"}
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </motion.div>
                 </div>
-            </motion.div>
+            </div>
         </div>
     );
 };
