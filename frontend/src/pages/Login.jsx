@@ -5,6 +5,7 @@ import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import { useTheme } from '../context/ThemeContext';
 import { FiSun, FiMoon } from 'react-icons/fi';
+import { toast } from 'react-hot-toast';
 import { login as authLogin } from '../services/authService';
 
 const Login = () => {
@@ -49,9 +50,11 @@ const Login = () => {
     try {
       const userData = await authLogin(formData);
       login(userData);
+      toast.success('Welcome back!');
       navigate('/dashboard');
     } catch (err) {
       setError(err.message || 'An error occurred during login');
+      toast.error(err.message || 'Login failed');
       setIsLoading(false);
     }
   };

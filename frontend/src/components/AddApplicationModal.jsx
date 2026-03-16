@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { X, Loader2, Calendar, MapPin, Briefcase, Building2, FileText } from 'lucide-react';
+import { toast } from 'react-hot-toast';
 
 const AddApplicationModal = ({ isOpen, onClose, onSubmit, initialData = null }) => {
   const [formData, setFormData] = useState({
@@ -46,9 +47,11 @@ const AddApplicationModal = ({ isOpen, onClose, onSubmit, initialData = null }) 
     setIsLoading(true);
     try {
       await onSubmit(formData);
+      toast.success(initialData ? 'Application updated successfully' : 'Application added successfully');
       onClose();
     } catch (error) {
       console.error('Error submitting application:', error);
+      toast.error('Something went wrong');
     } finally {
       setIsLoading(false);
     }

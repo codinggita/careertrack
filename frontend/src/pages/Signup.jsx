@@ -4,6 +4,7 @@ import { Loader2, Mail, Lock, User } from 'lucide-react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useTheme } from '../context/ThemeContext';
 import { FiSun, FiMoon } from 'react-icons/fi';
+import { toast } from 'react-hot-toast';
 import { signup as authSignup } from '../services/authService';
 
 const Signup = () => {
@@ -64,9 +65,11 @@ const Signup = () => {
       });
       
       setIsLoading(false);
+      toast.success('Account created successfully! Please log in.');
       navigate('/login');
     } catch (err) {
       setError(err.message || 'An error occurred during signup');
+      toast.error(err.message || 'Signup failed');
       setIsLoading(false);
     }
   };
