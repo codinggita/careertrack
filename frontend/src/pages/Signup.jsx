@@ -1,7 +1,8 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { Loader2, Mail, Lock, User } from 'lucide-react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
+import { signup as authSignup } from '../services/authService';
 
 const Signup = () => {
   const [formData, setFormData] = useState({
@@ -12,6 +13,7 @@ const Signup = () => {
   });
   const [error, setError] = useState('');
   const [isLoading, setIsLoading] = useState(false);
+  const navigate = useNavigate();
   
   const nameInputRef = useRef(null);
 
@@ -52,16 +54,16 @@ const Signup = () => {
     setIsLoading(true);
 
     try {
-      await new Promise((resolve) => {
-        setTimeout(() => {
-           resolve(true); 
-        }, 1500);
+      await authSignup({
+        name: formData.name,
+        email: formData.email,
+        password: formData.password
       });
       
       setIsLoading(false);
-      // alert('Account created (Mock)!');
+      navigate('/login');
     } catch (err) {
-      setError('An error occurred during signup');
+      setError(err.message || 'An error occurred during signup');
       setIsLoading(false);
     }
   };
