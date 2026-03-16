@@ -5,6 +5,7 @@ import Signup from './pages/Signup'
 import Landing from './pages/Landing'
 import Dashboard from './pages/Dashboard';
 import Applications from './pages/Applications';
+import InterviewCalendar from './pages/InterviewCalendar';
 import ProtectedRoute from './components/ProtectedRoute';
 import { AuthProvider } from './context/AuthContext';
 import './App.css'
@@ -28,6 +29,11 @@ function App() {
         <Route path="/dashboard/applications" element={
           <ProtectedRoute>
             <Applications />
+          </ProtectedRoute>
+        } />
+        <Route path="/calendar" element={
+          <ProtectedRoute>
+            <InterviewCalendar />
           </ProtectedRoute>
         } />
       </Routes>

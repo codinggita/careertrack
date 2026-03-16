@@ -31,6 +31,10 @@ const applicationSchema = new mongoose.Schema({
     enum: ['High', 'Medium', 'Low'],
     default: 'Medium'
   },
+  interviewDate: {
+    type: Date,
+    default: null
+  },
   notes: {
     type: String
   }

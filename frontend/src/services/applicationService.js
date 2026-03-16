@@ -68,3 +68,16 @@ export const deleteApplication = async (id) => {
   }
   return response.json();
 };
+
+/**
+ * Fetch all interviews for a specific user.
+ * @param {string} userId
+ */
+export const getInterviews = async (userId) => {
+  const response = await fetch(`${API_URL}/interviews?userId=${userId}`);
+  if (!response.ok) {
+    const error = await response.json();
+    throw new Error(error.message || 'Failed to fetch interviews');
+  }
+  return response.json();
+};

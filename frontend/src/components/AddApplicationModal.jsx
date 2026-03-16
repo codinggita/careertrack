@@ -10,6 +10,7 @@ const AddApplicationModal = ({ isOpen, onClose, onSubmit, initialData = null }) 
     dateApplied: new Date().toISOString().split('T')[0],
     status: 'Applied',
     priority: 'Medium',
+    interviewDate: '',
     notes: ''
   });
   const [isLoading, setIsLoading] = useState(false);
@@ -18,7 +19,8 @@ const AddApplicationModal = ({ isOpen, onClose, onSubmit, initialData = null }) 
     if (initialData) {
       setFormData({
         ...initialData,
-        dateApplied: initialData.dateApplied ? new Date(initialData.dateApplied).toISOString().split('T')[0] : ''
+        dateApplied: initialData.dateApplied ? new Date(initialData.dateApplied).toISOString().split('T')[0] : '',
+        interviewDate: initialData.interviewDate ? new Date(initialData.interviewDate).toISOString().split('T')[0] : ''
       });
     } else {
       setFormData({
@@ -28,6 +30,7 @@ const AddApplicationModal = ({ isOpen, onClose, onSubmit, initialData = null }) 
         dateApplied: new Date().toISOString().split('T')[0],
         status: 'Applied',
         priority: 'Medium',
+        interviewDate: '',
         notes: ''
       });
     }
@@ -168,6 +171,19 @@ const AddApplicationModal = ({ isOpen, onClose, onSubmit, initialData = null }) 
                     <option value="Low">Low</option>
                   </select>
                 </div>
+              </div>
+
+              <div className="space-y-1">
+                <label className="text-sm font-semibold text-slate-700 dark:text-slate-300 flex items-center gap-2">
+                  <Calendar className="w-4 h-4 text-purple-500" /> Interview Date (Optional)
+                </label>
+                <input
+                  type="date"
+                  name="interviewDate"
+                  value={formData.interviewDate}
+                  onChange={handleChange}
+                  className="w-full px-4 py-2 rounded-xl border border-slate-200 dark:border-slate-600 bg-slate-50 dark:bg-slate-900 focus:ring-2 focus:ring-indigo-500 outline-none transition-all dark:text-white"
+                />
               </div>
 
               <div className="space-y-1">
