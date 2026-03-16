@@ -69,10 +69,10 @@ const Signup = () => {
   };
 
   return (
-    <div className="min-h-screen flex w-full bg-slate-50 dark:bg-slate-900 overflow-hidden font-sans">
+    <div className="min-h-screen flex w-full bg-gradient-to-br from-indigo-50 via-white to-blue-100 dark:from-slate-950 dark:via-slate-900 dark:to-slate-950 overflow-hidden font-sans">
       
       {/* Left Column: Branding Section (Hidden on small screens) */}
-      <div className="hidden lg:flex lg:w-1/2 bg-gradient-to-br from-indigo-700 via-purple-700 to-indigo-900 p-12 flex-col justify-between relative overflow-hidden">
+      <div className="hidden lg:flex lg:w-1/2 bg-gradient-to-br from-indigo-600 via-purple-600 to-indigo-900 p-12 flex-col justify-between relative overflow-hidden shadow-2xl">
         
         {/* Animated Background Blobs */}
         <motion.div 
@@ -148,11 +148,11 @@ const Signup = () => {
            className="w-full max-w-md my-auto"
         >
           {/* Form Card */}
-          <div className="bg-white/80 dark:bg-slate-800/80 backdrop-blur-xl rounded-2xl shadow-2xl shadow-indigo-500/10 dark:shadow-none border border-slate-100 dark:border-slate-700/50 overflow-hidden relative z-10">
-             <div className="p-8 sm:p-10">
-               <div className="text-center mb-8">
-                 <h2 className="text-3xl font-bold text-slate-900 dark:text-white tracking-tight">Create an account</h2>
-                 <p className="text-slate-500 dark:text-slate-400 mt-2 text-sm font-medium">Please enter your details to sign up.</p>
+          <div className="bg-white/80 dark:bg-slate-800/80 backdrop-blur-2xl rounded-[3rem] shadow-2xl shadow-indigo-500/10 dark:shadow-none border border-white dark:border-slate-700/50 overflow-hidden relative z-10">
+             <div className="p-10 sm:p-12">
+               <div className="text-center mb-10">
+                 <h2 className="text-4xl font-black text-slate-900 dark:text-white tracking-tighter italic">Create Account</h2>
+                 <p className="text-slate-500 dark:text-slate-400 mt-2 text-sm font-bold uppercase tracking-widest italic opacity-60">Join the Elite</p>
                </div>
 
                <form className="space-y-5" onSubmit={handleSubmit}>
