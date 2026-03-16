@@ -36,8 +36,8 @@ const features = [
 
 const Features = () => {
   return (
-    <section id="features" className="py-32 bg-white dark:bg-slate-950 relative overflow-hidden">
-      <div className="absolute top-1/2 left-0 w-64 h-64 bg-indigo-500/5 rounded-full blur-[100px]" />
+    <section id="features" className="py-32 bg-white dark:bg-slate-950 relative overflow-hidden transition-colors duration-500">
+      <div className="absolute top-1/2 left-0 w-64 h-64 bg-indigo-500/5 rounded-full blur-[100px] transition-all duration-500" />
       <div className="container mx-auto px-6 relative z-10">
         <div className="text-center max-w-3xl mx-auto mb-20">
           <motion.div

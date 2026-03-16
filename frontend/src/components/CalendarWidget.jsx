@@ -161,16 +161,31 @@ const CalendarWidget = ({ userId }) => {
                     border-radius: 8px;
                     transition: all 0.2s;
                 }
+                .highlight-date {
+                    position: relative;
+                    background: rgba(79, 70, 229, 0.05) !important;
+                }
                 .highlight-date::after {
                     content: '';
                     position: absolute;
-                    bottom: 4px;
+                    bottom: 6px;
                     left: 50%;
                     transform: translateX(-50%);
-                    width: 4px;
-                    height: 4px;
+                    width: 12px;
+                    height: 3px;
                     background: #4f46e5;
-                    border-radius: 50%;
+                    border-radius: 2px;
+                    box-shadow: 0 0 8px rgba(79, 70, 229, 0.6);
+                }
+                .dark .highlight-date {
+                    background: rgba(129, 140, 248, 0.1) !important;
+                }
+                .dark .highlight-date::after {
+                    background: #818cf8;
+                    box-shadow: 0 0 8px rgba(129, 140, 248, 0.6);
+                }
+                .react-calendar__tile--active.highlight-date::after {
+                    background: white;
                 }
                 .react-calendar__navigation button {
                     font-weight: 700;

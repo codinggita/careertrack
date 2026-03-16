@@ -59,7 +59,7 @@ const InterviewCalendar = () => {
         .sort((a, b) => new Date(a.interviewDate) - new Date(b.interviewDate));
 
     return (
-        <div className="min-h-screen bg-gradient-to-br from-indigo-50 via-white to-blue-100 dark:from-slate-950 dark:via-slate-900 dark:to-slate-950 p-6 sm:p-10">
+        <div className="min-h-screen bg-gradient-to-br from-indigo-50 via-white to-blue-100 dark:from-slate-950 dark:via-slate-900 dark:to-slate-950 p-6 sm:p-10 transition-colors duration-500">
             <div className="max-w-7xl mx-auto space-y-10">
                 {/* Header */}
                 <motion.div 
@@ -95,7 +95,7 @@ const InterviewCalendar = () => {
                     <motion.div 
                         initial={{ opacity: 0, x: -20 }}
                         animate={{ opacity: 1, x: 0 }}
-                        className="lg:col-span-2 bg-white/80 dark:bg-slate-800/80 backdrop-blur-xl rounded-3xl p-8 shadow-2xl border border-white dark:border-slate-700"
+                        className="lg:col-span-2 bg-white/80 dark:bg-slate-800/80 backdrop-blur-xl rounded-3xl p-8 shadow-2xl border border-white dark:border-slate-700 transition-all duration-300"
                     >
                         <Calendar
                             onChange={setSelectedDate}
@@ -143,18 +143,29 @@ const InterviewCalendar = () => {
                             }
                             .highlight-date {
                                 position: relative;
+                                background: rgba(79, 70, 229, 0.05) !important;
                             }
                             .highlight-date::after {
                                 content: '';
                                 position: absolute;
-                                bottom: 10px;
+                                bottom: 12px;
                                 left: 50%;
                                 transform: translateX(-50%);
-                                width: 8px;
-                                height: 8px;
+                                width: 20px;
+                                height: 4px;
                                 background: #4f46e5;
-                                border-radius: 50%;
-                                box-shadow: 0 0 10px #4f46e5;
+                                border-radius: 2px;
+                                box-shadow: 0 0 10px rgba(79, 70, 229, 0.8);
+                            }
+                            .dark .highlight-date {
+                                background: rgba(129, 140, 248, 0.1) !important;
+                            }
+                            .dark .highlight-date::after {
+                                background: #818cf8;
+                                box-shadow: 0 0 10px rgba(129, 140, 248, 0.8);
+                            }
+                            .react-calendar__tile--active.highlight-date::after {
+                                background: white;
                             }
                             .react-calendar__navigation button {
                                 font-size: 1.25rem;
@@ -185,7 +196,7 @@ const InterviewCalendar = () => {
                         animate={{ opacity: 1, x: 0 }}
                         className="space-y-6"
                     >
-                        <div className="bg-white/80 dark:bg-slate-800/80 backdrop-blur-xl rounded-3xl p-8 shadow-2xl border border-white dark:border-slate-700 h-full flex flex-col">
+                        <div className="bg-white/80 dark:bg-slate-800/80 backdrop-blur-xl rounded-3xl p-8 shadow-2xl border border-white dark:border-slate-700 h-full flex flex-col transition-all duration-300">
                             <div className="flex items-center justify-between mb-8">
                                 <h3 className="text-xl font-black text-slate-900 dark:text-white flex items-center gap-2">
                                     <Clock className="w-5 h-5 text-indigo-500 animate-pulse" />

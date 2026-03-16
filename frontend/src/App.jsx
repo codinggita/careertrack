@@ -8,13 +8,15 @@ import Applications from './pages/Applications';
 import InterviewCalendar from './pages/InterviewCalendar';
 import ProtectedRoute from './components/ProtectedRoute';
 import { AuthProvider } from './context/AuthContext';
+import { ThemeProvider } from './context/ThemeContext';
 import './App.css'
 
 function App() {
 
   return (
-    <AuthProvider>
-      <Routes>
+    <ThemeProvider>
+      <AuthProvider>
+        <Routes>
         <Route path="/" element={<Landing />} />
         <Route path="/login" element={<Login />} />
         <Route path="/signup" element={<Signup />} />
@@ -37,7 +39,8 @@ function App() {
           </ProtectedRoute>
         } />
       </Routes>
-    </AuthProvider>
+      </AuthProvider>
+    </ThemeProvider>
   )
 }
 

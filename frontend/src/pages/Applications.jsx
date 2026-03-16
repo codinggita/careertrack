@@ -103,7 +103,7 @@ const Applications = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-indigo-50 via-white to-blue-100 dark:from-slate-950 dark:via-slate-900 dark:to-slate-950 p-6 sm:p-10">
+    <div className="min-h-screen bg-gradient-to-br from-indigo-50 via-white to-blue-100 dark:from-slate-950 dark:via-slate-900 dark:to-slate-950 p-6 sm:p-10 transition-colors duration-500">
       <div className="max-w-7xl mx-auto space-y-10">
         {/* Header */}
         <motion.div 
@@ -144,7 +144,7 @@ const Applications = () => {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.1 }}
-          className="bg-white/80 dark:bg-slate-800/80 backdrop-blur-xl p-6 rounded-3xl shadow-xl border border-white dark:border-slate-700 flex flex-wrap items-center gap-6"
+          className="bg-white/80 dark:bg-slate-800/80 backdrop-blur-xl p-6 rounded-3xl shadow-xl border border-white dark:border-slate-700 flex flex-wrap items-center gap-6 transition-all duration-300"
         >
           <div className="relative flex-1 min-w-[280px]">
             <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-400" />
@@ -199,7 +199,7 @@ const Applications = () => {
                   key={app._id}
                   variants={item}
                   whileHover={{ y: -6, scale: 1.01 }}
-                  className="bg-white dark:bg-slate-800 rounded-3xl p-8 shadow-xl border border-white dark:border-slate-700 hover:shadow-2xl transition-all relative group overflow-hidden"
+                  className="bg-white dark:bg-slate-800 rounded-3xl p-8 shadow-xl border border-white dark:border-slate-700 hover:shadow-2xl transition-all duration-300 relative group overflow-hidden"
                 >
                   <div className="absolute top-0 right-0 w-32 h-32 bg-indigo-50 dark:bg-indigo-900/10 rounded-full blur-3xl -mr-16 -mt-16 opacity-0 group-hover:opacity-100 transition-opacity" />
                   
