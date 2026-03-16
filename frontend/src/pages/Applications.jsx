@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Plus, Building2, Briefcase, MapPin, Calendar, Trash2, Edit2, Clock, Search, ChevronLeft, ChevronRight } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
+import { toast } from 'react-hot-toast';
 import * as applicationService from '../services/applicationService';
 import AddApplicationModal from '../components/AddApplicationModal';
 import StatusFilter from '../components/StatusFilter';
@@ -82,9 +83,11 @@ const Applications = () => {
     if (window.confirm('Are you sure you want to delete this application?')) {
       try {
         await applicationService.deleteApplication(id);
+        toast.success('Application deleted successfully');
         fetchApplications();
       } catch (error) {
         console.error('Failed to delete application:', error);
+        toast.error('Failed to delete application');
       }
     }
   };
