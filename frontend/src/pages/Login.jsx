@@ -1,6 +1,9 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { Loader2, Mail, Lock } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
+import { useAuth } from '../context/AuthContext';
+import { login as authLogin } from '../services/authService';
 
 const Login = () => {
   const [formData, setFormData] = useState({
@@ -9,6 +12,8 @@ const Login = () => {
   });
   const [error, setError] = useState('');
   const [isLoading, setIsLoading] = useState(false);
+  const { login } = useAuth();
+  const navigate = useNavigate();
   
   const emailInputRef = useRef(null);
 
@@ -39,17 +44,9 @@ const Login = () => {
     setIsLoading(true);
 
     try {
-      await new Promise((resolve, reject) => {
-        setTimeout(() => {
-           if(formData.email === 'test@test.com') {
-               reject(new Error('Invalid credentials (mock error)'));
-           } else {
-               resolve(true);
-           }
-        }, 1500);
-      });
-      
-      setIsLoading(false);
+      const userData = await authLogin(formData);
+      login(userData);
+      navigate('/dashboard');
     } catch (err) {
       setError(err.message || 'An error occurred during login');
       setIsLoading(false);
