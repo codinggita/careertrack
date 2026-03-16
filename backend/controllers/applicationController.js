@@ -29,15 +29,53 @@ const createApplication = async (req, res) => {
   }
 };
 
-// Get all applications for a user
+// Get all applications for a user with filtering, sorting and pagination
 const getApplications = async (req, res) => {
   try {
-    const { userId } = req.query;
+    const { userId, search, status, priority, sort, page = 1, limit = 6 } = req.query;
+    
     if (!userId) {
       return res.status(400).json({ message: 'User ID is required' });
     }
-    const applications = await Application.find({ userId }).sort({ dateApplied: -1 });
-    res.json(applications);
+
+    // Build Query
+    const query = { userId };
+    
+    if (status) query.status = status;
+    if (priority) query.priority = priority;
+    if (search) {
+      query.$or = [
+        { companyName: { $regex: search, $options: 'i' } },
+        { role: { $regex: search, $options: 'i' } }
+      ];
+    }
+
+    // Sorting
+    let sortOption = { dateApplied: -1 }; // Default
+    if (sort) {
+      const [field, order] = sort.split('_');
+      sortOption = { [field]: order === 'desc' ? -1 : 1 };
+    } else if (sort === 'company_asc') {
+       sortOption = { companyName: 1 };
+    } else if (sort === 'company_desc') {
+       sortOption = { companyName: -1 };
+    }
+
+    // Pagination
+    const skip = (parseInt(page) - 1) * parseInt(limit);
+    
+    const totalApplications = await Application.countDocuments(query);
+    const applications = await Application.find(query)
+      .sort(sortOption)
+      .skip(skip)
+      .limit(parseInt(limit));
+
+    res.json({
+      applications,
+      currentPage: parseInt(page),
+      totalPages: Math.ceil(totalApplications / parseInt(limit)),
+      totalApplications
+    });
   } catch (error) {
     res.status(500).json({ message: error.message });
   }
