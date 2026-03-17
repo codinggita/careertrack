@@ -2,7 +2,7 @@
 
 CareerTrack is a full stack web application designed to help students organize and manage their internship and job applications efficiently. The platform provides a centralized dashboard where users can track applications, monitor interview schedules, and analyze their progress.
 
-Frontend-Deployed-Link : https://careertrack-flame.vercel.app/ //
+Frontend-Deployed-Link : https://careertrack-flame.vercel.app/ \
 Backend-Deployed-Link : https://careertrack-5.onrender.com
 ---
 
